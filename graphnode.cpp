@@ -53,15 +53,23 @@ void GraphNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
 
 void GraphNode::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
+//    qDebug() << "GraphNode mousePressEvent";
 //    setCursor(Qt::CrossCursor);
-    setSelected(true);
-    update();
+//    setSelected(true);
+//    update();
     QGraphicsItem::mousePressEvent(event);
+}
+
+void GraphNode::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+{
+    QGraphicsItem::mouseMoveEvent(event);
 }
 
 void GraphNode::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-    setCursor(Qt::ArrowCursor);
+//    setCursor(Qt::ArrowCursor);
+//    update();
+    QGraphicsItem::mouseReleaseEvent(event);
 }
 
 QVariant GraphNode::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)

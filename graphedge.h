@@ -2,15 +2,13 @@
 #define GRAPHEDGE_H
 
 #include <QGraphicsItem>
-#include <QSharedPointer>
 
 class GraphNode;
 
 class GraphEdge : public QGraphicsItem
 {
 public:
-    GraphEdge(QSharedPointer<GraphNode> from, QSharedPointer<GraphNode> to);
-    ~GraphEdge() override;
+    GraphEdge(GraphNode* from, GraphNode* to);
 
     auto fromNode() const;
     auto toNode() const;
@@ -18,12 +16,15 @@ public:
     enum { Type = UserType + 2 };
     int type() const override { return Type; }
 
+    void init();
+
 protected:
     QRectF boundingRect() const override;
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 
 private:
-    QSharedPointer<GraphNode> fromNode_, toNode_;
+    GraphNode *fromNode_, *toNode_;
+    QPointF sourcePoint, destPoint;
     qreal arrowSize_;
 };
 

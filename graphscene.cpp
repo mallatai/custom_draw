@@ -5,6 +5,7 @@
 #include <QKeyEvent>
 
 #include "graphnode.h"
+#include "graphedge.h"
 
 #include <QDebug>
 
@@ -18,6 +19,13 @@ GraphScene::GraphScene(QWidget* parent)
 
     setRenderHint(QPainter::Antialiasing);
     setWindowTitle("Custom draw");
+
+    drawingState_ = NotDrawing;
+
+    pressReleaseEventDiffTime_.setSingleShot(true);
+    connect(&pressReleaseEventDiffTime_, &QTimer::timeout, [this] () {
+        drawingState_ = InDrawing;
+    });
 }
 
 void GraphScene::mousePressEvent(QMouseEvent *event)
@@ -25,14 +33,18 @@ void GraphScene::mousePressEvent(QMouseEvent *event)
     switch (event->button()) {
     case Qt::RightButton:
     {
-        for (auto item : items(event->pos())) {
-            scene_->removeItem(item);
+        auto itemAtPos = itemAt(event->pos());
+        if (itemAtPos) {
+            pressReleaseEventDiffTime_.start(400);
+            sourceNode_ = dynamic_cast<GraphNode*>(itemAtPos);
         }
+
+        QGraphicsView::mousePressEvent(event);
     }
         break;
     case Qt::LeftButton:
     {
-        if (QGraphicsItem* item = itemAt(event->pos())) {
+        if (itemAt(event->pos())) {
             break;
         }
 
@@ -50,4 +62,49 @@ void GraphScene::mousePressEvent(QMouseEvent *event)
         QGraphicsView::mousePressEvent(event);
         break;
     }
+}
+
+void GraphScene::mouseReleaseEvent(QMouseEvent *event)
+{
+    pressReleaseEventDiffTime_.stop();
+
+    if (event->button() != Qt::RightButton) {
+        QGraphicsView::mouseReleaseEvent(event);
+        return;
+    }
+
+    qDebug() << "Mouse release" << (drawingState_ == InDrawing) << sourceNode_;
+
+    switch (drawingState_) {
+    case NotDrawing:
+    {
+        if (event->button() == Qt::RightButton) {
+            qDebug() << "GraphScene mouseReleaseEvent";
+            for (auto item : items(event->pos())) {
+                scene_->removeItem(item);
+            }
+        }
+    }
+        break;
+    case InDrawing:
+    {
+        qDebug() << "InDrawing" << sourceNode_;
+        if (!sourceNode_)
+            break;
+
+        auto itemAtPos = dynamic_cast<GraphNode*>(itemAt(event->pos()));
+        if (itemAtPos && sourceNode_) {
+            auto graphEdge = new GraphEdge(sourceNode_, itemAtPos);
+            qDebug() << "Adding graphEdge" << graphEdge;
+            scene_->addItem(graphEdge);
+        }
+    }
+        break;
+    }
+
+    QGraphicsView::mouseReleaseEvent(event);
+
+    sourceNode_ = nullptr;
+
+    drawingState_ = NotDrawing;
 }
