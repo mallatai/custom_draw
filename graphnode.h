@@ -18,6 +18,10 @@ public:
     int index() const;
     void setIndex(int index);
 
+    void addEdge(GraphEdge *edge);
+    void removeEdge(GraphEdge *edge);
+    QList<GraphEdge*> edges() const;
+
     QRectF boundingRect() const override;
     QPainterPath shape() const override;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;

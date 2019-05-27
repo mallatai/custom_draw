@@ -38,9 +38,19 @@ auto GraphEdge::fromNode() const
     return fromNode_;
 }
 
+void GraphEdge::setFromNode(GraphNode *fromNode)
+{
+    fromNode_ = fromNode;
+}
+
 auto GraphEdge::toNode() const
 {
     return toNode_;
+}
+
+void GraphEdge::setToNode(GraphNode *toNode)
+{
+    toNode_ = toNode;
 }
 
 QRectF GraphEdge::boundingRect() const

@@ -24,6 +24,22 @@ void GraphNode::setIndex(int index)
     index_ = index;
 }
 
+void GraphNode::addEdge(GraphEdge *edge)
+{
+    if (edge)
+        edges_ << edge;
+}
+
+void GraphNode::removeEdge(GraphEdge *edge)
+{
+    edges_.removeOne(edge);
+}
+
+QList<GraphEdge*> GraphNode::edges() const
+{
+    return edges_;
+}
+
 QRectF GraphNode::boundingRect() const
 {
     return QRectF(-15,-15,30,30);
@@ -75,7 +91,7 @@ void GraphNode::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 QVariant GraphNode::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
 {
     if (change == ItemPositionChange) {
-        // TODO redraw edges
+        // TODO redraw edges when item is moved
     }
 
     return QGraphicsItem::itemChange(change, value);

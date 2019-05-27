@@ -81,7 +81,13 @@ void GraphScene::mouseReleaseEvent(QMouseEvent *event)
         if (event->button() == Qt::RightButton) {
             qDebug() << "GraphScene mouseReleaseEvent";
             for (auto item : items(event->pos())) {
-                scene_->removeItem(item);
+                if (GraphNode *graphNode = qgraphicsitem_cast<GraphNode*>(item)) {
+                    for (auto edge : graphNode->edges()) {
+                        scene_->removeItem(edge);
+                        delete edge;
+                    }
+                    scene_->removeItem(graphNode);
+                }
             }
         }
     }
@@ -95,7 +101,12 @@ void GraphScene::mouseReleaseEvent(QMouseEvent *event)
         auto itemAtPos = dynamic_cast<GraphNode*>(itemAt(event->pos()));
         if (itemAtPos && sourceNode_) {
             auto graphEdge = new GraphEdge(sourceNode_, itemAtPos);
+
             qDebug() << "Adding graphEdge" << graphEdge;
+
+            sourceNode_->addEdge(graphEdge);
+            itemAtPos->addEdge(graphEdge);
+
             scene_->addItem(graphEdge);
         }
     }

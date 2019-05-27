@@ -11,7 +11,10 @@ public:
     GraphEdge(GraphNode* from, GraphNode* to);
 
     auto fromNode() const;
+    void setFromNode(GraphNode* fromNode);
+
     auto toNode() const;
+    void setToNode(GraphNode* toNode);
 
     enum { Type = UserType + 2 };
     int type() const override { return Type; }
