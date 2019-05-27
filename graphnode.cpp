@@ -10,7 +10,6 @@
 GraphNode::GraphNode(int index, QGraphicsView *parent)
     : index_(index), graphView_(parent)
 {
-    setToolTip("fuck off");
     setFlag(QGraphicsItem::ItemIsSelectable);
 }
 
