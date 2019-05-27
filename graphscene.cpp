@@ -36,7 +36,7 @@ void GraphScene::mousePressEvent(QMouseEvent *event)
         auto itemAtPos = itemAt(event->pos());
         if (itemAtPos) {
             pressReleaseEventDiffTime_.start(400);
-            sourceNode_ = dynamic_cast<GraphNode*>(itemAtPos);
+            sourceNode_ = qgraphicsitem_cast<GraphNode*>(itemAtPos);
         }
 
         QGraphicsView::mousePressEvent(event);
@@ -98,7 +98,7 @@ void GraphScene::mouseReleaseEvent(QMouseEvent *event)
         if (!sourceNode_)
             break;
 
-        auto itemAtPos = dynamic_cast<GraphNode*>(itemAt(event->pos()));
+        auto itemAtPos = qgraphicsitem_cast<GraphNode*>(itemAt(event->pos()));
         if (itemAtPos && sourceNode_) {
             auto graphEdge = new GraphEdge(sourceNode_, itemAtPos);
 
